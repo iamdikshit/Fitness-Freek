@@ -16,6 +16,7 @@ import product5 from "./images/products/5.png";
 import product6 from "./images/products/6.png";
 import product7 from "./images/products/7.png";
 import product8 from "./images/products/8.png";
+import error from "./images/dribbble_1.gif";
 
 export const images = {
   product0,
@@ -34,4 +35,5 @@ export const images = {
   logo,
   hero,
   hero2,
+  error,
 };

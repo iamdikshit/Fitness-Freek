@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-color: #fff;
+}
+
+@layer components {
+  .menu-links {
+    @apply text-xs lg:text-base relative py-2 text-gray-700 hover:text-gray-900  after:h-[2px] after:w-0 after:bg-red-700 after:absolute after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 after:ease-in-out;
+  }
+  .active {
+    @apply text-black relative  after:h-[2px] after:w-full after:bg-red-700 after:absolute after:bottom-0 after:left-0;
+  }
+  .link-after-effect {
+    @apply relative after:h-[2px] after:w-0 after:bg-red-700 after:absolute after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 after:ease-in-out;
+  }
+  .link-bottem-line {
+    @apply relative after:h-[2px] after:w-20 after:bg-red-700 after:absolute after:bottom-0 after:left-0 after:transition-all after:duration-300 after:ease-in-out;
+  }
+
+  .warning {
+    @apply bg-yellow-700;
+  }
+  .danger {
+    @apply bg-red-700;
+  }
+  .success {
+    @apply bg-green-700;
+  }
+}
