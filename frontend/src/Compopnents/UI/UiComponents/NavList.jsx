@@ -38,6 +38,7 @@ const NavList = (props) => {
 
       <li>
         <NavLink
+          onClick={props.OnClick}
           className={`${({ isActive }) =>
             isActive ? "active" : ""}  menu-links `}
           to="/"
@@ -48,6 +49,7 @@ const NavList = (props) => {
       </li>
       <li>
         <NavLink
+          onClick={props.OnClick}
           className={`${({ isActive }) =>
             isActive ? "active" : ""}  menu-links `}
           to="product"
@@ -58,6 +60,7 @@ const NavList = (props) => {
       </li>
       <li>
         <NavLink
+          onClick={props.OnClick}
           className={`${({ isActive }) =>
             isActive ? "active" : ""}  menu-links `}
           to="about"
@@ -68,6 +71,7 @@ const NavList = (props) => {
       </li>
       <li>
         <NavLink
+          onClick={props.OnClick}
           className={`${({ isActive }) =>
             isActive ? "active" : ""}  menu-links `}
           to="contact"

@@ -13,8 +13,9 @@ const Footer = () => {
         <div className="inner-footer flex flex-col col-span-2 sm:col-span-1 lg:col-span-2">
           <img className="w-32" src={images.logo} alt="logo" />
           <address className="mt-auto pt-6">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum
-            exercitationem itaque ipsa impedit? Cumque recusandae reiciendis
+            We provide the right diet plan and the right sports supplements all
+            over India, So that India remains healthy and wealthy, Because we
+            believe that health is wealth.
           </address>
         </div>
         <div className="inner-footer flex flex-col gap-3">
@@ -69,7 +70,7 @@ const Footer = () => {
         </div>
         <div className="inner-footer flex flex-col gap-3 sm:col-span-1 lg:col-span-2">
           <h1 className="uppercase font-semibold">Contact</h1>
-          <i className="">proteinwali@shop.com</i>
+          <i className="">fitnessfreek@shop.com</i>
           <ul className="flex items-center gap-4">
             <li>
               <a

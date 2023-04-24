@@ -166,6 +166,27 @@ export default defineType({
       ],
     }),
 
+    // Categories
+
+    defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        layout: 'dropdown',
+        list: ['protein', 'preworkout', 'postworkout', 'other'],
+      },
+    }),
+
+    // Coupon
+    defineField({
+      name: 'coupon',
+      title: 'Coupon',
+      type: 'reference',
+      to: {type: 'coupon'},
+      description: 'Coupon ID',
+    }),
+
     // Tags
     defineField({
       name: 'tags',

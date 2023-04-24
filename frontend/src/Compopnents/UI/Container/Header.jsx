@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { images } from "../../../assets";
 import { NavList, SearchBar, Button, OverLay } from "../UiComponents";
 import { motion } from "framer-motion";
-
+import { useSelector } from "react-redux";
 import {
   IoCartOutline,
   IoHeartOutline,
@@ -11,7 +11,14 @@ import {
   IoReorderThreeOutline,
   IoCloseOutline,
 } from "react-icons/io5";
+import { Link } from "react-router-dom";
+
 const Header = () => {
+  const totalItems = useSelector((state) => state.cart.totalItems);
+  const { totalItems: wishlistTotalItems } = useSelector(
+    (state) => state.wishlist
+  );
+
   const [isActive, setIsActive] = useState(false);
   const [searchActive, setSearchActive] = useState(false);
   const toggleMenu = () => {
@@ -39,24 +46,35 @@ const Header = () => {
               </Button>
             </li>
             <li className="flex justify-center items-center relative">
-              <a href="/" className="flex justify-center items-center">
+              <Link
+                to={"wishlist"}
+                className="flex justify-center items-center"
+              >
                 <IoHeartOutline
                   className="w-6 h-6 text-light-gray hover:text-dark-gray"
                   name="heart-outline"
                 ></IoHeartOutline>
-                <span className="absolute animate-ping -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
-                <span className="absolute -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
-              </a>
+                {wishlistTotalItems > 0 && (
+                  <>
+                    <span className="absolute animate-ping -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
+                    <span className="absolute -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
+                  </>
+                )}
+              </Link>
             </li>
             <li className="flex justify-center items-center relative">
-              <a href="/" className="flex justify-center items-center">
+              <Link to={"cart"} className="flex justify-center items-center">
                 <IoCartOutline
                   className="w-6 h-6 text-light-gray hover:text-dark-gray"
                   name="cart-outline"
                 ></IoCartOutline>
-                <span className="absolute animate-ping -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
-                <span className="absolute -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
-              </a>
+                {totalItems > 0 && (
+                  <>
+                    <span className="absolute animate-ping -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
+                    <span className="absolute -right-0 -top-0 md:-right-1 md:-top-1 rounded-full bg-red-700 w-2 h-2 md:w-3 md:h-3 p-0 m-0 text-white font-mono text-[0.5rem] md:text-xs leading-tight text-center"></span>
+                  </>
+                )}
+              </Link>
             </li>
             <li className="hidden lg:block">
               <div className="container mx-auto flex items-center gap-2 lg:hidden ">
@@ -141,6 +159,7 @@ const Header = () => {
             ></IoCloseOutline>
           </Button>
           <NavList
+            OnClick={toggleMenu}
             class={
               "navbar flex flex-col lg:flex-row gap-2 p-4 font-semibold uppercase"
             }

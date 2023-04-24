@@ -5,3 +5,6 @@ export { default as OfferAlert } from "./OfferAlert";
 export { default as SearchBar } from "./SearchBar";
 export { default as NavList } from "./NavList";
 export { default as OverLay } from "./OverLay";
+export { default as TotalCard } from "./TotalCard";
+export { default as CartCard } from "./CartCard";
+export { default as QuantityButton } from "./QuantityButton";

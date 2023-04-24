@@ -13,41 +13,64 @@ export const cartSlice = createSlice({
   reducers: {
     addItems: (state, action) => {
       const existingItemIndex = state.cart.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
-      if (existingItemIndex <= -1) {
-        // data does not exists in cart
-        state.cart = [...state.cart, action.payload];
-        state.totalItems = state.totalItems + 1;
-      } else {
+      const exisitngItem = state.cart[existingItemIndex];
+
+      if (exisitngItem) {
         // data exist just update its quantity
-        const exisitngItem = state.cart[existingItemIndex];
+        // const exisitngItem = state.cart[existingItemIndex];
         exisitngItem.quantity++;
+        exisitngItem.totatPrice = exisitngItem.price * exisitngItem.quantity;
         state.cart[existingItemIndex] = exisitngItem;
+      } else {
+        // data does not exists in cart
+        const newItem = {
+          ...action.payload,
+          totatPrice: action.payload.price,
+          quantity: 1,
+        };
+        state.cart = state.cart.concat(newItem);
+
+        state.totalItems = state.totalItems + 1;
       }
+    },
+    addMultipleItems: (state, action) => {
+      state.totalItems = action.payload.length;
+      console.log(state.totalItems);
+      state.cart = [...action.payload];
     },
     removeItemsByQty: (state, action) => {
       const existingItemIndex = state.cart.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
       const existingItem = state.cart[existingItemIndex];
       if (existingItem) {
-        if (existingItem.quantity > 0) {
+        if (existingItem.quantity > 1) {
           // data exists in cart
           existingItem.quantity--;
+          existingItem.totatPrice = existingItem.quantity * existingItem.price;
           state.cart[existingItemIndex] = existingItem;
         } else {
           // if quantity is zero than remove item completely
           const updatedCart = state.cart.filter(
-            (item) => item.id !== action.payload
+            (item) => item._id !== action.payload._id
           );
           state.cart = [...updatedCart];
+          state.totalItems = state.totalItems - 1;
         }
       }
     },
-    removeItems: (state, action) => {},
+    removeItems: (state, action) => {
+      const updatedCart = state.cart.filter(
+        (item) => item._id !== action.payload._id
+      );
+      state.cart = [...updatedCart];
+      state.totalItems = state.totalItems - 1;
+    },
   },
 });
 
-export const { addItems, removeItemsByQty, removeItems } = cartSlice.actions;
+export const { addItems, addMultipleItems, removeItemsByQty, removeItems } =
+  cartSlice.actions;
 export default cartSlice.reducer;
