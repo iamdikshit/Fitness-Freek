@@ -39,6 +39,7 @@ const ProductDetails = (props) => {
     }
   }, [data.variants]);
 
+  console.log(weight);
   /*
     creating arrays of images
     */
