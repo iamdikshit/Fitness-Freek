@@ -15,7 +15,8 @@ import {
 } from "./Compopnents/Pages";
 import { useDispatch } from "react-redux";
 import { addMultipleItems } from "./Compopnents/Store/CartSlice";
-import { addItems as wishlistAddItems } from "./Compopnents/Store/WishlistSlice";
+import { addMultipleItems as addMultipleItemsWishlist } from "./Compopnents/Store/WishlistSlice";
+import { loader as productDeltailLoader } from "./Compopnents/Pages/ProductDetail";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
           },
           {
             path: ":slug",
+            loader: productDeltailLoader,
             element: <ProductDetail />,
           },
         ],
@@ -79,7 +81,8 @@ function App() {
       }
 
       if (wishlistData) {
-        wishlistData.map((item) => dispatch(wishlistAddItems(item)));
+        dispatch(addMultipleItemsWishlist(wishlistData));
+        // wishlistData.map((item) => dispatch(addMultipleItemsWishlist(item)));
       }
     };
 

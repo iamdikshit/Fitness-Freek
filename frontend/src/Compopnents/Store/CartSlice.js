@@ -36,9 +36,37 @@ export const cartSlice = createSlice({
       }
     },
     addMultipleItems: (state, action) => {
-      state.totalItems = action.payload.length;
-      console.log(state.totalItems);
-      state.cart = [...action.payload];
+      const total = action.payload.length;
+      if (total <= 0) {
+        state.totalItems = total;
+        state.cart = [...action.payload];
+      } else {
+        for (const items of action.payload) {
+          const existingItemIndex = state.cart.findIndex(
+            (item) => item._id === items._id
+          );
+          const exisitngItem = state.cart[existingItemIndex];
+
+          if (exisitngItem) {
+            // data exist just update its quantity
+            // const exisitngItem = state.cart[existingItemIndex];
+            exisitngItem.quantity++;
+            exisitngItem.totatPrice =
+              exisitngItem.price * exisitngItem.quantity;
+            state.cart[existingItemIndex] = exisitngItem;
+          } else {
+            // data does not exists in cart
+            const newItem = {
+              ...items,
+              totatPrice: action.payload.price,
+              quantity: 1,
+            };
+            state.cart = state.cart.concat(newItem);
+
+            state.totalItems = state.totalItems + 1;
+          }
+        }
+      }
     },
     removeItemsByQty: (state, action) => {
       const existingItemIndex = state.cart.findIndex(

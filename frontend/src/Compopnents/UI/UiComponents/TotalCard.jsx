@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 const TotalCard = (props) => {
   let totalAmount = props.data.reduce((acc, item) => acc + item.totatPrice, 0);
 
@@ -54,9 +55,12 @@ const TotalCard = (props) => {
 
       {/* <!-- action btn --> */}
       <div className="action-btn flex">
-        <button className="flex-grow px-2 md:px-4 py-1 bg-black text-white border-black border-2 hover:border-2 hover:bg-white hover:text-black transition duration-300 ease-in-out">
-          Proceed to Checkout
-        </button>
+        <Link
+          onClick={props.OnClick}
+          className="flex-grow px-2 md:px-4 py-1 bg-black text-center text-white border-black border-2 hover:border-2 hover:bg-white hover:text-black transition duration-300 ease-in-out"
+        >
+          {props.btnlabel}
+        </Link>
       </div>
     </div>
   );

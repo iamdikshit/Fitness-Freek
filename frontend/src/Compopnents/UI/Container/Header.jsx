@@ -140,7 +140,7 @@ const Header = () => {
             pointerEvents: "auto",
           }}
           transition={{
-            duration: 0.5,
+            duration: 0.2,
             ease: "easeInOut",
           }}
           id="nav"

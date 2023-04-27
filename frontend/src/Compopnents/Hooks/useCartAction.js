@@ -2,7 +2,11 @@ import { useDispatch } from "react-redux";
 import { useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { addItems, removeItemsByQty, removeItems } from "../Store/CartSlice";
-import { addItems as addWishlistItems } from "../Store/WishlistSlice";
+import {
+  addItems as addWishlistItems,
+  removeItemsByQty as removeItemsByQtyWishlist,
+  removeItems as removeItemsWishlist,
+} from "../Store/WishlistSlice";
 
 const useCartAction = () => {
   const cart = useSelector((state) => state.cart.cart);
@@ -49,10 +53,9 @@ const useCartAction = () => {
       variants: data.variants ? [data.variants[0]] : [],
     };
 
-    const existItem = cart.find((item) => item._id === data._id);
-
-    const quantity = existItem?.quantity ? existItem.quantity : 0;
     if (type === "cart") {
+      const existItem = cart.find((item) => item._id === data._id);
+      const quantity = existItem?.quantity ? existItem.quantity : 0;
       if (quantity < 5) {
         dispatch(addItems(item));
         return true;
@@ -60,6 +63,8 @@ const useCartAction = () => {
         return false;
       }
     } else if (type === "wishlist") {
+      const existItem = wishlist.find((item) => item._id === data._id);
+      const quantity = existItem?.quantity ? existItem.quantity : 0;
       if (quantity < 5) {
         dispatch(addWishlistItems(item));
         return true;
@@ -74,7 +79,7 @@ const useCartAction = () => {
     if (type === "cart") {
       dispatch(removeItemsByQty({ _id: data._id }));
     } else if (type === "wishlist") {
-      dispatch(removeItemsByQty({ _id: data._id }));
+      dispatch(removeItemsByQtyWishlist({ _id: data._id }));
     }
   };
 
@@ -83,7 +88,7 @@ const useCartAction = () => {
     if (type === "cart") {
       dispatch(removeItems({ _id: data._id }));
     } else if (type === "wishlist") {
-      dispatch(removeItemsByQty({ _id: data._id }));
+      dispatch(removeItemsWishlist({ _id: data._id }));
     }
   };
   return {

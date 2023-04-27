@@ -5,6 +5,7 @@ import QuantityButton from "./QuantityButton";
 import useCartAction from "../../Hooks/useCartAction";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Button from "./Button";
 const CartCard = (props) => {
   const { insertDataIntoCart, removeDataFromCart, removeItemFromCart } =
     useCartAction();
@@ -19,16 +20,16 @@ const CartCard = (props) => {
     }
   };
   const increaseQuantity = () => {
-    if (!insertDataIntoCart({ type: "cart", data: props.data })) {
+    if (!insertDataIntoCart({ type: props.label, data: props.data })) {
       notify({ type: "error", message: "Quantity can not more than 5" });
     }
   };
 
   const decreaseQuantity = () => {
-    removeDataFromCart({ type: "cart", data: props.data });
+    removeDataFromCart({ type: props.label, data: props.data });
   };
   const removeItemCart = () => {
-    removeItemFromCart({ type: "cart", data: props.data });
+    removeItemFromCart({ type: props.label, data: props.data });
   };
 
   return (
@@ -123,12 +124,12 @@ const CartCard = (props) => {
             </div>
           </div>
           <div className="remove absolute top-0 right-0">
-            <button onClick={removeItemCart}>
+            <Button OnClick={removeItemCart}>
               <IoTrashOutline
                 className="p-1 bg-gray-100 rounded-full w-6 h-6"
                 name="trash-outline"
               ></IoTrashOutline>
-            </button>
+            </Button>
           </div>
           {/* <!-- remove --> */}
         </div>

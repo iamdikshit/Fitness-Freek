@@ -8,3 +8,4 @@ export { default as OverLay } from "./OverLay";
 export { default as TotalCard } from "./TotalCard";
 export { default as CartCard } from "./CartCard";
 export { default as QuantityButton } from "./QuantityButton";
+export { default as ProductDetailLoading } from "./LoadingComponent/ProductDetailLoading";

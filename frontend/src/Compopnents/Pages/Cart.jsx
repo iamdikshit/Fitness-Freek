@@ -1,22 +1,9 @@
 import React from "react";
 import { TotalCard, CartCard } from "../UI/UiComponents";
 import { useSelector } from "react-redux";
-import { images } from "../../assets";
+import { NoData } from "../UI/Container";
 const Cart = () => {
   const { totalItems, cart } = useSelector((state) => state.cart);
-
-  const NoData = () => {
-    return (
-      <section className="Cart-section py-4 px-8 md:px-16 my-4">
-        <div className="relative flex  flex-col items-center justify-center">
-          <h1 className=" absolute top-12 text-sm md:text-xl lg:text-4xl font-bold text-gray-500">
-            Cart is empty
-          </h1>
-          <img className=" w-full" src={images.error} alt="error" />
-        </div>
-      </section>
-    );
-  };
 
   return (
     <>
@@ -25,7 +12,7 @@ const Cart = () => {
           <div className="carts flex flex-col gap-12 lg:col-span-3">
             {/* <!-- cart 1 --> */}
             {cart.map((item, index) => (
-              <CartCard key={index} data={item} />
+              <CartCard key={index} data={item} label={"cart"} />
             ))}
             {/* <!-- cart-2 --> */}
           </div>
