@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 const TotalCard = (props) => {
-  let totalAmount = props.data.reduce((acc, item) => acc + item.totatPrice, 0);
+  let totalAmount = props.data.reduce((acc, item) => acc + +item.totatPrice, 0);
 
   return (
     <div className="order md:max-h-[33rem] shadow-md flex flex-col gap-8 p-4 lg:col-span-2 border-b-4 rounded-lg border-black">
@@ -25,7 +25,7 @@ const TotalCard = (props) => {
               <h1 className="text-sm">{item.name}</h1>
               <div className="flex flex-col items-end">
                 <h1 className="text-sm">
-                  <span>{item.quantity}</span> x ₹{item.price}
+                  <span>{item.quantity}</span> x ₹{item.variants[0].price}
                 </h1>
                 <h1 className="text-sm ">₹{item.totatPrice} </h1>
               </div>

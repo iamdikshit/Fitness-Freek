@@ -9,6 +9,8 @@ import Button from "./Button";
 const CartCard = (props) => {
   const { insertDataIntoCart, removeDataFromCart, removeItemFromCart } =
     useCartAction();
+
+  const variants = props.data.variants[0];
   /*
     Notification function
   */
@@ -50,8 +52,12 @@ const CartCard = (props) => {
           <div className="flex flex-col justify-between">
             <div className="product-detail">
               <h1 className="text-sm lg:text-lg font-bold">
-                {props.data.name}
+                {`${props.data.name}`}
               </h1>
+              <p className="text-xs ">
+                {`${variants.weight.weight} ${variants.weight.unit} ${variants.flavor} flavor`}
+              </p>
+
               <ul className="flex items-center">
                 <li>
                   <ion-icon
@@ -88,7 +94,7 @@ const CartCard = (props) => {
             </div>
             <div className="product-price-quantity relative">
               <div className="price text-lg font-bold text-slate-900">
-                <span className="">₹{props.data.price}</span>
+                <span className="">₹{props.data.variants[0].price}</span>
               </div>
 
               <div className="quantity absolute top-0 right-0 flex items-center justify-center gap-4">

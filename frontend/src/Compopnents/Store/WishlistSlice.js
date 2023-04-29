@@ -20,14 +20,24 @@ export const wishlistSlice = createSlice({
       if (exisitngItem) {
         // data exist just update its quantity
         // const exisitngItem = state.wishlist[existingItemIndex];
-        exisitngItem.quantity++;
-        exisitngItem.totatPrice = exisitngItem.price * exisitngItem.quantity;
+        if (
+          exisitngItem.variants[0].flavor ===
+            action.payload.variants[0].flavor &&
+          exisitngItem.variants[0].weight.weight ===
+            action.payload.variants[0].weight.weight
+        ) {
+          exisitngItem.quantity++;
+        } else {
+          exisitngItem.variants = [...action.payload.variants];
+        }
+        exisitngItem.totatPrice =
+          exisitngItem.variants[0].price * exisitngItem.quantity;
         state.wishlist[existingItemIndex] = exisitngItem;
       } else {
-        // data does not exists in wishlist
+        // data does not exists in cart
         const newItem = {
           ...action.payload,
-          totatPrice: action.payload.price,
+          totatPrice: +action.payload.variants[0].price,
           quantity: 1,
         };
         state.wishlist = state.wishlist.concat(newItem);
@@ -36,8 +46,9 @@ export const wishlistSlice = createSlice({
       }
     },
     addMultipleItems: (state, action) => {
-      state.totalItems = action.payload.length;
-      if (state.totalItems <= 0) {
+      const total = action.payload.length;
+      if (total <= 0) {
+        state.totalItems = total;
         state.wishlist = [...action.payload];
       } else {
         for (const items of action.payload) {
@@ -51,13 +62,13 @@ export const wishlistSlice = createSlice({
             // const exisitngItem = state.wishlist[existingItemIndex];
             exisitngItem.quantity++;
             exisitngItem.totatPrice =
-              exisitngItem.price * exisitngItem.quantity;
+              exisitngItem.variants[0].price * exisitngItem.quantity;
             state.wishlist[existingItemIndex] = exisitngItem;
           } else {
-            // data does not exists in wishlist
+            // data does not exists in cart
             const newItem = {
               ...items,
-              totatPrice: action.payload.price,
+              totatPrice: items.variants[0].price,
               quantity: 1,
             };
             state.wishlist = state.wishlist.concat(newItem);
@@ -76,7 +87,8 @@ export const wishlistSlice = createSlice({
         if (existingItem.quantity > 1) {
           // data exists in wishlist
           existingItem.quantity--;
-          existingItem.totatPrice = existingItem.quantity * existingItem.price;
+          existingItem.totatPrice =
+            existingItem.quantity * existingItem.variants[0].price;
           state.wishlist[existingItemIndex] = existingItem;
         } else {
           // if quantity is zero than remove item completely

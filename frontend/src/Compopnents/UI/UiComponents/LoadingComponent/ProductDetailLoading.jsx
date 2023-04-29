@@ -1,7 +1,7 @@
 import React from "react";
 const ProductDetailLoading = () => {
   return (
-    <div className="loading-section grid grid-cols-1 lg:grid-cols-2 gap-8 ">
+    <div className="loading-section grid grid-cols-1 lg:grid-cols-2 gap-8  px-8 pt-8 md:px-16">
       <div className="left-section overflow-x-hidden flex flex-col justify-center items-center gap-8">
         <div className="main-image  animate-pulse bg-slate-300 w-full lg:w-96 h-96"></div>
         <div className="main-image  animate-pulse ">

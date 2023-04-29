@@ -65,6 +65,7 @@ const useCartAction = () => {
     } else if (type === "wishlist") {
       const existItem = wishlist.find((item) => item._id === data._id);
       const quantity = existItem?.quantity ? existItem.quantity : 0;
+
       if (quantity < 5) {
         dispatch(addWishlistItems(item));
         return true;

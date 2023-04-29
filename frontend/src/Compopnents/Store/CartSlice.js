@@ -20,14 +20,24 @@ export const cartSlice = createSlice({
       if (exisitngItem) {
         // data exist just update its quantity
         // const exisitngItem = state.cart[existingItemIndex];
-        exisitngItem.quantity++;
-        exisitngItem.totatPrice = exisitngItem.price * exisitngItem.quantity;
+        if (
+          exisitngItem.variants[0].flavor ===
+            action.payload.variants[0].flavor &&
+          exisitngItem.variants[0].weight.weight ===
+            action.payload.variants[0].weight.weight
+        ) {
+          exisitngItem.quantity++;
+        } else {
+          exisitngItem.variants = [...action.payload.variants];
+        }
+        exisitngItem.totatPrice =
+          exisitngItem.variants[0].price * exisitngItem.quantity;
         state.cart[existingItemIndex] = exisitngItem;
       } else {
         // data does not exists in cart
         const newItem = {
           ...action.payload,
-          totatPrice: action.payload.price,
+          totatPrice: +action.payload.variants[0].price,
           quantity: 1,
         };
         state.cart = state.cart.concat(newItem);
@@ -52,13 +62,13 @@ export const cartSlice = createSlice({
             // const exisitngItem = state.cart[existingItemIndex];
             exisitngItem.quantity++;
             exisitngItem.totatPrice =
-              exisitngItem.price * exisitngItem.quantity;
+              exisitngItem.variants[0].price * exisitngItem.quantity;
             state.cart[existingItemIndex] = exisitngItem;
           } else {
             // data does not exists in cart
             const newItem = {
               ...items,
-              totatPrice: action.payload.price,
+              totatPrice: items.variants[0].price,
               quantity: 1,
             };
             state.cart = state.cart.concat(newItem);
@@ -77,7 +87,8 @@ export const cartSlice = createSlice({
         if (existingItem.quantity > 1) {
           // data exists in cart
           existingItem.quantity--;
-          existingItem.totatPrice = existingItem.quantity * existingItem.price;
+          existingItem.totatPrice =
+            existingItem.quantity * existingItem.variants[0].price;
           state.cart[existingItemIndex] = existingItem;
         } else {
           // if quantity is zero than remove item completely

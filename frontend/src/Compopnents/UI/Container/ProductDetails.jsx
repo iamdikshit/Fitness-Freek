@@ -10,19 +10,29 @@ import {
 } from "react-icons/io5";
 import { urlFor } from "../../SanityConfig/client";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import useCartAction from "../../Hooks/useCartAction";
 const ProductDetails = (props) => {
   const [data] = props.data;
   const carousel = useRef();
+  const weight = useRef();
   const [width, setWidth] = useState(0);
+  const [price, setPrice] = useState({
+    price: null,
+    markedprice: null,
+  });
+
   const [flavorsData, setFlavorsData] = useState([]);
   const [activeImg, setActiveImg] = useState(0);
-  const [weight, setWeight] = useState(null);
   const [flavors, setFlavors] = useState(null);
   const [actionBtn, setActionBtn] = useState({
     isDiscription: true,
     isReview: false,
     isSpecification: false,
   });
+
+  const { insertDataIntoCart } = useCartAction();
 
   useEffect(() => {
     /*
@@ -35,11 +45,15 @@ const ProductDetails = (props) => {
           flavorArray.push(item.flavor);
         }
       }
+      setPrice((prev) => ({
+        price: data.price.price,
+        markedprice: data.price.markedprice,
+      }));
+
       setFlavorsData((prev) => [...flavorArray]);
     }
-  }, [data.variants]);
+  }, [data.variants, data]);
 
-  console.log(weight);
   /*
     creating arrays of images
     */
@@ -72,12 +86,52 @@ const ProductDetails = (props) => {
     else setWidth(carousel.current.scrollWidth - carousel.current.offsetWidth);
   };
 
+  /*
+  @FindVariants based on flavor and weight,unit
+  */
+  const FindVariants = (flavor, weightAndUnit) => {
+    let weight, unit;
+
+    if (weightAndUnit !== "") {
+      weight = weightAndUnit.split(" ")[0];
+      unit = weightAndUnit.split(" ")[1];
+    } else {
+      const findWeight = data.variants.filter(
+        (items) => items.flavor === flavor
+      );
+      const getWeight = findWeight[0].weight;
+      weight = getWeight.weight;
+      unit = getWeight.unit;
+    }
+
+    const v = data.variants.filter(
+      (item) =>
+        item.flavor === (flavors ? flavors : flavor) &&
+        item.weight.weight === weight &&
+        item.weight.unit === unit
+    );
+    return v;
+  };
   const getFlavourHandler = (e) => {
-    setFlavors(e.target.value);
+    if (e.target.value !== "") {
+      setFlavors(e.target.value);
+      const price = FindVariants(e.target.value, weight.current.value)[0]
+        ?.price;
+
+      setPrice((prev) => ({
+        ...prev,
+        price: +price,
+      }));
+    }
   };
 
-  const weightHandler = (e) => {
-    setWeight(e.target.value);
+  const getWeightHangler = () => {
+    const price = FindVariants(flavors, weight.current.value)[0]?.price;
+
+    setPrice((prev) => ({
+      ...prev,
+      price: +price,
+    }));
   };
 
   const descriptionHandler = () => {
@@ -100,6 +154,36 @@ const ProductDetails = (props) => {
       isReview: true,
       isSpecification: false,
     }));
+  };
+
+  const notify = (option) => {
+    if (option.type === "success") {
+      toast.success(option.message);
+    } else {
+      toast.error(option.message);
+    }
+  };
+
+  /*
+  @sendProductDataHandler : takes two parameter type:cart | wishlisht and data (product data)
+  Based on type this function save the product data in cart or wishlist state
+  */
+  const sendProductDataHandler = (type, data) => {
+    if (flavors !== "" && weight.current.value) {
+      // const selectedWeight = weight.current.value.split(" ")[0];
+      // const unit = weight.current.value.split(" ")[1];
+      const v = FindVariants(flavors, weight.current.value);
+
+      const productData = { ...data, variants: v };
+
+      if (insertDataIntoCart({ type: type, data: productData })) {
+        notify({ type: "success", message: `Item is added in ${type}` });
+      } else {
+        notify({ type: "error", message: "Quantity can not more than 5" });
+      }
+    } else {
+      notify({ type: "error", message: "Please select flavor and weight" });
+    }
   };
 
   return (
@@ -218,14 +302,14 @@ const ProductDetails = (props) => {
                 {new Intl.NumberFormat("eng-In", {
                   style: "currency",
                   currency: "INR",
-                }).format(data.price.price)}
+                }).format(price.price)}
               </h1>
               <p className="text-gray-500 font-bold text-base sm:text-xl md:text-2xl">
                 <del>
                   {new Intl.NumberFormat("eng-In", {
                     style: "currency",
                     currency: "INR",
-                  }).format(data.price.markedprice)}
+                  }).format(price.markedprice)}
                 </del>
               </p>
             </div>
@@ -235,38 +319,24 @@ const ProductDetails = (props) => {
               </p>
             </div>
             <div className="product-action-section flex flex-row gap-4 mt-4">
-              <div className="quantity hidden  items-center gap-3">
-                <span className="text-base font-bold">Quantity:</span>
-                <div className="quantity-btn flex flex-row rounded-lg relative bg-transparent mt-1">
-                  <button
-                    data-action="decrement"
-                    className="bg-red-200 px-4 py-2 rounded-l-full relative after:w-[1px] after:h-6 after:absolute after:bg-red-100 after:right-0 after:top-3"
-                  >
-                    <span className="m-auto text-2xl font-thin">−</span>
-                  </button>
-                  <input
-                    type="number"
-                    className="focus:outline-none w-10 bg-red-200 text-center cursor-pointer appearance-none"
-                    name="custom-input-number
-                  "
-                    min="0"
-                  />
-                  <button
-                    data-action="increment"
-                    className="bg-red-200 py-2 px-4 rounded-r-full relative after:w-[1px] after:h-6 after:absolute after:bg-red-100 after:left-0 after:top-3"
-                  >
-                    <span className="m-auto text-2xl font-thin">+</span>
-                  </button>
-                </div>
-              </div>
               <div className="cart-action-section flex items-center gap-4">
-                <Button class="p-2 border-2 border-black rounded-full flex items-center justify-center">
+                <Button
+                  OnClick={() => {
+                    sendProductDataHandler("cart", data);
+                  }}
+                  class="p-2 border-2 border-black rounded-full flex items-center justify-center"
+                >
                   <IoCartOutline
                     className="w-6 h-6"
                     name="cart-outline"
                   ></IoCartOutline>
                 </Button>
-                <Button class="p-2 border-2 border-black rounded-full flex items-center justify-center">
+                <Button
+                  OnClick={() => {
+                    sendProductDataHandler("wishlist", data);
+                  }}
+                  class="p-2 border-2 border-black rounded-full flex items-center justify-center"
+                >
                   <IoHeartOutline
                     className="w-6 h-6"
                     title="Wishlist"
@@ -301,7 +371,7 @@ const ProductDetails = (props) => {
                             <option
                               key={index}
                               className="py-2 hover:bg-gray-000"
-                              value={item}
+                              defaultValue={item}
                             >
                               {item}
                             </option>
@@ -316,7 +386,8 @@ const ProductDetails = (props) => {
                   </span>
                   <span className="text-sm text-light-gray">
                     <select
-                      onChange={weightHandler}
+                      ref={weight}
+                      onChange={getWeightHangler}
                       className="focus:outline-none py-1 px-3"
                       name="weights"
                       id="weights"
@@ -329,7 +400,7 @@ const ProductDetails = (props) => {
                                 <option
                                   key={index}
                                   className="py-2 hover:bg-gray-000"
-                                  value="Chocolate"
+                                  defaultValue={`${item.weight.weight} ${item.weight.unit}`}
                                 >
                                   {item.weight.weight} {item.weight.unit}
                                 </option>
@@ -495,6 +566,7 @@ const ProductDetails = (props) => {
           </div>
         </div>
       </section>
+      <ToastContainer />
     </>
   );
 };
