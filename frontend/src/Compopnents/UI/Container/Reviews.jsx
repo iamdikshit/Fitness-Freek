@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import { IoStar, IoStarOutline } from "react-icons/io5";
-import { client, urlFor } from "../../SanityConfig/client";
+import { client } from "../../SanityConfig/client";
 const Reviews = ({ actionBtn, data }) => {
   const [productReviews, setProductRevies] = useState([]);
   useEffect(() => {
