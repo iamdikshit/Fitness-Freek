@@ -8,3 +8,4 @@ export { default as Product } from "./Product";
 export { default as Root } from "./Root";
 export { default as ProductDetails } from "./ProductDetails";
 export { default as NoData } from "./NoData";
+export { default as Reviews } from "./Reviews";

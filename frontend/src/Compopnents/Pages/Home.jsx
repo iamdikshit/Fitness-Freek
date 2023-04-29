@@ -32,7 +32,7 @@ const getProducts = async () => {
         coupon->{
         ...,
         }
-      }`;
+      }[0...10]`;
     const products = await client.fetch(query);
     // console.log(products);
     return products;

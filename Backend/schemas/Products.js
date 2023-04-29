@@ -72,7 +72,6 @@ export default defineType({
       title: 'Description',
       type: 'text',
       description: 'Short description for product',
-      validation: (Rule) => Rule.required().max(300),
     }),
 
     defineField({

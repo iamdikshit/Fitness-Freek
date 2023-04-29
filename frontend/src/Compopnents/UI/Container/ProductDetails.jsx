@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect } from "react";
-import { images } from "../../../assets";
+import PortableText from "react-portable-text";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import { Button } from "../UiComponents";
+import Reviews from "./Reviews";
 import {
   IoHeartOutline,
   IoCartOutline,
@@ -13,6 +14,8 @@ import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useCartAction from "../../Hooks/useCartAction";
+import useRatings from "../../Hooks/useRatings";
+
 const ProductDetails = (props) => {
   const [data] = props.data;
   const carousel = useRef();
@@ -22,6 +25,10 @@ const ProductDetails = (props) => {
     price: null,
     markedprice: null,
   });
+  const [averageRating, setAverageRating] = useState();
+  const [ratingCount, setRatingCount] = useState();
+
+  const { ratingFunction, noOfRating } = useRatings();
 
   const [flavorsData, setFlavorsData] = useState([]);
   const [activeImg, setActiveImg] = useState(0);
@@ -186,6 +193,17 @@ const ProductDetails = (props) => {
     }
   };
 
+  /*
+    Rating Calculation
+  */
+  useEffect(() => {
+    const getRating = async (avgRating) => {
+      setAverageRating(avgRating);
+    };
+    ratingFunction(data._id, getRating);
+    setRatingCount(noOfRating);
+  }, [data._id, ratingFunction, ratingCount, noOfRating]);
+
   return (
     <>
       <section className="Product-section px-8 pt-8 md:px-16 ">
@@ -256,45 +274,26 @@ const ProductDetails = (props) => {
             </div>
             <div className="product-ratings flex items-center gap-2">
               <ul className="flex items-center">
-                <li>
-                  <IoStar
-                    className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
-                    name="star"
-                  ></IoStar>
-                </li>
-                <li>
-                  <IoStar
-                    className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
-                    name="star"
-                  ></IoStar>
-                </li>
-                <li>
-                  <IoStar
-                    className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
-                    name="star"
-                  ></IoStar>
-                </li>
-                <li>
-                  <ion-icon
-                    className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
-                    name="star"
-                  ></ion-icon>
-                </li>
-                <li>
-                  <IoStar
-                    className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
-                    name="star-half"
-                  ></IoStar>
-                </li>
-                <li>
-                  <IoStarOutline
-                    className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
-                    name="star-outline"
-                  ></IoStarOutline>
-                </li>
+                {[1, 2, 3, 4, 5].map((el, index) =>
+                  el <= averageRating ? (
+                    <li key={index}>
+                      <IoStar
+                        className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
+                        name="star"
+                      ></IoStar>
+                    </li>
+                  ) : (
+                    <li key={index}>
+                      <IoStarOutline
+                        className="text-yellow-500 w-4 h-4 lg:w-5 lg:h-5"
+                        name="star-outline"
+                      ></IoStarOutline>
+                    </li>
+                  )
+                )}
               </ul>
               <p className="text-xs lg:text-sm">
-                <a href="/">( 132 reviews )</a>
+                <a href="/">{`(${ratingCount} reviews)`}</a>
               </p>
             </div>
             <div className="product-price flex items-end gap-4">
@@ -315,7 +314,9 @@ const ProductDetails = (props) => {
             </div>
             <div className="product-short-description mt-2 lg:mt-8">
               <p className="text-sm sm:text-base lg:text-sm text-light-gray">
-                {data.description}
+                {data.description
+                  ? `${data.description.substr(0, 300)}.....`
+                  : "No description Available"}
               </p>
             </div>
             <div className="product-action-section flex flex-row gap-4 mt-4">
@@ -456,18 +457,7 @@ const ProductDetails = (props) => {
           } `}
         >
           <p className="text-sm">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-            nesciunt quaerat voluptate, nisi voluptates iste ipsam dolorem
-            veritatis voluptatibus voluptas, molestias ut. Fuga doloribus, error
-            quae ab quo at culpa. Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Magni nesciunt quaerat voluptate, nisi voluptates
-            iste ipsam dolorem veritatis voluptatibus voluptas, molestias ut.
-            Fuga doloribus, error quae ab quo at culpa.
-            <br />
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Magni
-            nesciunt quaerat voluptate, nisi voluptates iste ipsam dolorem
-            veritatis voluptatibus voluptas, molestias ut. Fuga doloribus, error
-            quae ab quo at culpa.
+            {data.description ? data.description : "No description"}
           </p>
         </div>
         <div
@@ -475,96 +465,15 @@ const ProductDetails = (props) => {
             actionBtn.isSpecification ? "" : "hidden"
           }`}
         >
-          <table className="table-auto">
-            <tbody>
-              <tr className="border-b border-b-gray-500">
-                <td className="p-2 text-sm border-r border-l border-l-gray-500 border-r-gray-500">
-                  The Sliding Mr. Bones
-                </td>
-                <td className="p-2 text-sm border-r border-r-gray-500">
-                  Malcolm Lockyer
-                </td>
-              </tr>
-              <tr className="border-b border-b-gray-500">
-                <td className="p-2 text-sm border-r border-r-gray-500 border-l border-l-gray-500">
-                  Witchy Woman
-                </td>
-                <td className="p-2 text-sm border-r border-r-gray-500">
-                  The Eagles
-                </td>
-              </tr>
-              <tr className="border-b border-b-gray-500">
-                <td className="p-2 text-sm border-r border-r-gray-500 border-l border-l-gray-500">
-                  Shining Star
-                </td>
-                <td className="p-2 text-sm border-r border-r-gray-500">
-                  Earth, Wind, and Fire
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          {data.specification ? (
+            <PortableText content={data.specification} />
+          ) : (
+            "No specification Available for this product"
+          )}
         </div>
 
-        <div className={`Reviews py-6 ${actionBtn.isReview ? "" : "hidden"} `}>
-          {/* <!-- review 3 --> */}
-          <div className="review border-b border-b-gray-500 flex flex-col gap-4 py-4 mt-4">
-            <div className="review-header flex gap-4">
-              <img
-                className="w-8 h-8 rounded-full"
-                src={images.user}
-                alt="user "
-              />
-              <div className="user-detail">
-                <h1 className="text-sm font-bold">
-                  Ashutosh Sharma
-                  <span className="text-xs font-normal text-gray-500">
-                    13h ago
-                  </span>
-                </h1>
-                <ul className="flex items-center">
-                  <li>
-                    <IoStar
-                      className="text-yellow-700 w-4 h-4"
-                      name="star"
-                    ></IoStar>
-                  </li>
-                  <li>
-                    <IoStar
-                      className="text-yellow-700 w-4 h-4"
-                      name="star"
-                    ></IoStar>
-                  </li>
-                  <li>
-                    <IoStar
-                      className="text-yellow-700 w-4 h-4"
-                      name="star"
-                    ></IoStar>
-                  </li>
-                  <li>
-                    <IoStar
-                      className="text-yellow-700 w-4 h-4"
-                      name="star-half"
-                    ></IoStar>
-                  </li>
-                  <li>
-                    <IoStar
-                      className="text-yellow-700 w-4 h-4"
-                      name="star-outline"
-                    ></IoStar>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div className="description">
-              <p className="text-sm">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Laborum ex officia, aperiam suscipit maxime illo laudantium
-                autem ut cumque quam, at sequi! Suscipit nobis ipsa tempora
-                explicabo, eum porro id.
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* Reviews section */}
+        <Reviews actionBtn={actionBtn} data={data} />
       </section>
       <ToastContainer />
     </>
