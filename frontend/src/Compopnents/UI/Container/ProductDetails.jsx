@@ -26,6 +26,8 @@ const ProductDetails = (props) => {
     markedprice: null,
   });
   const [averageRating, setAverageRating] = useState();
+  const [productImages, setProductImages] = useState([]);
+
   const [ratingCount, setRatingCount] = useState();
 
   const { ratingFunction, noOfRating } = useRatings();
@@ -46,7 +48,7 @@ const ProductDetails = (props) => {
     This useEffect is used to store the unique flavours 
     */
     let flavorArray = [];
-    if (data.variants) {
+    if (data.length !== 0 && data.variants) {
       for (const item of data.variants) {
         if (!flavorArray.includes(item.flavor)) {
           flavorArray.push(item.flavor);
@@ -64,8 +66,12 @@ const ProductDetails = (props) => {
   /*
     creating arrays of images
     */
-  let productImages = [data.poster];
-  data.images.map((img) => productImages.push(img));
+
+  useEffect(() => {
+    let Images = [data.poster];
+    data.images.map((img) => Images.push(img));
+    setProductImages((prev) => [...Images]);
+  }, [data]);
 
   //function for selection of main image
   const currentImg = useRef();
@@ -200,9 +206,11 @@ const ProductDetails = (props) => {
     const getRating = async (avgRating) => {
       setAverageRating(avgRating);
     };
-    ratingFunction(data._id, getRating);
-    setRatingCount(noOfRating);
-  }, [data._id, ratingFunction, ratingCount, noOfRating]);
+    if (data.length !== 0) {
+      ratingFunction(data._id, getRating);
+      setRatingCount(noOfRating);
+    }
+  }, [data, ratingFunction, ratingCount, noOfRating]);
 
   return (
     <>

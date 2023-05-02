@@ -1,9 +1,52 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { IoSearchOutline, IoCloseOutline } from "react-icons/io5";
 import { motion } from "framer-motion";
 import { Button, OverLay } from "../UiComponents";
-
+import { client } from "../../SanityConfig/client";
+import { Link } from "react-router-dom";
+import SearchLoading from "./SearchLoading";
 const SearchBar = (props) => {
+  const [searchInput, setSearchInput] = useState("");
+  const [noData, setNoData] = useState();
+  const [searchProducts, setSearchProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const searchInputHadler = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  useEffect(() => {
+    const getData = async () => {
+      if (searchInput !== "") {
+        setIsLoading(true);
+        const query = `*[_type == "product" && name match "${searchInput}*" || category=="${searchInput}*"]`;
+        const searchProduct = await client.fetch(query);
+        setIsLoading(false);
+        if (searchProduct.length <= 0) {
+          setNoData(true);
+        } else {
+          setNoData(false);
+          console.log(searchProduct);
+          setSearchProducts((prev) => [...searchProduct]);
+        }
+      } else {
+        setSearchProducts([]);
+        setNoData(false);
+      }
+    };
+
+    const timeOutId = setTimeout(getData, 1000);
+
+    // getData();
+    return () => {
+      clearTimeout(timeOutId);
+    };
+  }, [searchInput]);
+
+  const ClearInput = () => {
+    setSearchInput("");
+    props.OnClick();
+  };
   return (
     <>
       <OverLay active={props.searchActive} OnClick={props.OnClick} />
@@ -18,7 +61,7 @@ const SearchBar = (props) => {
           duration: 0.2,
           ease: "easeInOut",
         }}
-        className={`mx-4 fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-[9999]  sm:mx-auto mt-12 h-96  w-full max-w-md shadow-lg bg-white py-8 px-4 sm:px-6 flex flex-col gap-8 ${
+        className={`mx-auto   fixed top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 z-[50]  sm:mx-auto mt-12 h-96 w-full   max-w-sm sm:max-w-md shadow-lg bg-white py-8 px-4 sm:px-6 flex flex-col gap-8 ${
           props.searchActive ? "" : "hidden"
         }`}
       >
@@ -39,25 +82,50 @@ const SearchBar = (props) => {
             <IoSearchOutline className="w-4 h-4 border-gray-300" />
           </button>
           <input
-            type="Search "
+            onChange={searchInputHadler}
+            type="text"
+            value={searchInput}
             className="block text-lg flex-grow bg-transparent focus:outline-none  text-black"
             placeholder="Search product..."
           />
         </div>
         <div className="overflow-y-scroll">
-          <ul className="text-gray-600 text-sm">
-            <li className="py-2 text-xl font-bold text-center ">
-              No data Available
-            </li>
-          </ul>
-          <ul className="text-gray-600 text-sm">
-            <li className="py-2 hover:text-black">Onn Whey Protien</li>
-            <li className="py-2 hover:text-black">Onn Whey Protien</li>
-            <li className="py-2 hover:text-black">Onn Whey Protien</li>
-            <li className="py-2 hover:text-black">Onn Whey Protien</li>
-            <li className="py-2 hover:text-black">Onn Whey Protien</li>
-            <li className="py-2 hover:text-black">Onn Whey Protien</li>
-          </ul>
+          {!isLoading && searchInput.length > 0 && noData && (
+            <div className=" z-[99999] overflow-y-scroll w-full max-w-lg max-h-48 bg-white top-12  -left-0 rounded-md bg-opacity-70 backdrop-blur-sm p-2 ">
+              <ul>
+                <li className="p-2 text-center text-black cursor-pointer">
+                  No product found
+                </li>
+              </ul>
+            </div>
+          )}
+          {searchProducts.length > 0 && (
+            <div className=" z-[99999] overflow-y-scroll w-full max-w-lg max-h-48 bg-white top-12  -left-0 rounded-md bg-opacity-70 backdrop-blur-sm  p-2 ">
+              <ul>
+                {isLoading && <SearchLoading />}
+
+                {!isLoading &&
+                  searchProducts.length > 0 &&
+                  searchProducts.map((m, index) => (
+                    <Link
+                      key={index}
+                      onClick={ClearInput}
+                      to={`/product/${m.slug.current}`}
+                    >
+                      <li
+                        className={`p-2 ${
+                          searchProducts.length <= 1
+                            ? ""
+                            : "border-b border-b-gray-500"
+                        }  text-black  hover:text-blue-500 cursor-pointer     last:border-none`}
+                      >
+                        {m.name}
+                      </li>
+                    </Link>
+                  ))}
+              </ul>
+            </div>
+          )}
         </div>
       </motion.div>
     </>

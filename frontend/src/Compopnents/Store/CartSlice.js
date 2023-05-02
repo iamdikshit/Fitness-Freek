@@ -9,6 +9,7 @@ export const cartSlice = createSlice({
   initialState: {
     cart: [],
     totalItems: 0,
+    totalAmount: 0,
   },
   reducers: {
     addItems: (state, action) => {
@@ -106,6 +107,9 @@ export const cartSlice = createSlice({
       );
       state.cart = [...updatedCart];
       state.totalItems = state.totalItems - 1;
+    },
+    updateTotalAmount: (state, action) => {
+      state.totalAmount = action.payload;
     },
   },
 });

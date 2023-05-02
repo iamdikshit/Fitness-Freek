@@ -49,6 +49,7 @@ const useCartAction = () => {
       _id: data._id,
       name: data.name,
       poster: data.poster,
+      coupon: data.coupon,
       price: +data.price.price,
       variants: data.variants ? [data.variants[0]] : [],
     };

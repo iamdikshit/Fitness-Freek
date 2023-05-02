@@ -22,10 +22,18 @@ export default ProductDetail;
 
 const getProductDetail = async (params) => {
   try {
-    const query = `*[slug.current == "${params.slug}"]`;
+    const query = `*[_type=="product"  && slug.current == "${params.slug}"]{
+      ...,
+      coupon->{
+        ...,
+      }
+    }`;
     const products = await client.fetch(query);
-    // console.log(products);
-    return products;
+    if (products.length <= 0) {
+      throw new Response("Product not Found", { status: 404 });
+    } else {
+      return products;
+    }
   } catch (err) {
     return err;
   }

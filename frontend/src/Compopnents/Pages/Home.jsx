@@ -12,7 +12,7 @@ const Home = () => {
       <Hero />
       <Suspense>
         <Await resolve={products}>
-          {(items) => <Product products={items} />}
+          {(items) => <Product title={"Products"} products={items} />}
         </Await>
       </Suspense>
 

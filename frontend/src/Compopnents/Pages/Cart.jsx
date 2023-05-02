@@ -19,6 +19,8 @@ const Cart = () => {
           <TotalCard
             data={cart}
             label={"Order"}
+            btntype={"cart"}
+            isCouponActive={false}
             btnlabel={"Proceed to checkout"}
           />
         </section>

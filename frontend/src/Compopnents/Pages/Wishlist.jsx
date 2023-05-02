@@ -3,14 +3,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { CartCard, TotalCard } from "../UI/UiComponents";
 import { NoData } from "../UI/Container";
 import { addMultipleItems } from "../Store/CartSlice";
+import { useNavigate } from "react-router-dom";
 import { addMultipleItems as addMultipleItemsWishlist } from "../Store/WishlistSlice";
 const Wishlist = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { totalItems, wishlist } = useSelector((state) => state.wishlist);
 
   const addToCart = () => {
     dispatch(addMultipleItems(wishlist));
     dispatch(addMultipleItemsWishlist([]));
+    navigate(`/cart`);
   };
 
   return (
@@ -27,6 +30,8 @@ const Wishlist = () => {
           <TotalCard
             data={wishlist}
             label={"Order"}
+            btntype={"wishlist"}
+            isCouponActive={false}
             btnlabel={"Add to Cart"}
             OnClick={addToCart}
           />

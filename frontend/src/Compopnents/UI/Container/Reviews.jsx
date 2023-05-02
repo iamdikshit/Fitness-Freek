@@ -34,7 +34,7 @@ const Reviews = ({ actionBtn, data }) => {
       } `}
     >
       {/* <!-- review 3 --> */}
-      <div className="review lg:col-span-3  flex flex-col gap-4 py-4 mt-4">
+      <div className="review lg:col-span-3  flex flex-col gap-4 py-4 mt-4 overflow-y-scroll ">
         {productReviews?.map((productreview, index) => (
           <div key={index} className="user-review  border-b border-b-gray-200">
             <div className="review-header flex items-center gap-4">

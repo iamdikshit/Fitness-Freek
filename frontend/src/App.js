@@ -12,12 +12,15 @@ import {
   ProductDetail,
   Wishlist,
   Error,
+  Checkout,
 } from "./Compopnents/Pages";
 import { useDispatch } from "react-redux";
 import { addMultipleItems } from "./Compopnents/Store/CartSlice";
 import { addMultipleItems as addMultipleItemsWishlist } from "./Compopnents/Store/WishlistSlice";
 import { loader as productDeltailLoader } from "./Compopnents/Pages/ProductDetail";
-
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { client } from "./Compopnents/SanityConfig/client";
+import { addUser, loggedIn } from "./Compopnents/Store/UserSlice";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -57,6 +60,10 @@ const router = createBrowserRouter([
         element: <Cart />,
       },
       {
+        path: "checkout",
+        element: <Checkout />,
+      },
+      {
         path: "wishlist",
         element: <Wishlist />,
       },
@@ -66,6 +73,24 @@ const router = createBrowserRouter([
 
 function App() {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    // console.log(token);
+
+    client
+      .fetch(`*[_type=="user" && token=="${token}"]`)
+      .then((res) => {
+        if (res.length === 1) {
+          dispatch(loggedIn());
+          dispatch(addUser(res[0]));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [dispatch]);
+
   // Store cart and wishlist from localstorage
   useEffect(() => {
     const setData = () => {
@@ -91,7 +116,12 @@ function App() {
       clearTimeout(timeIdentifier);
     };
   }, [dispatch]);
-  return <RouterProvider router={router} />;
+
+  return (
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
+  );
 }
 
 export default App;

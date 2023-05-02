@@ -1,30 +1,37 @@
 import React from "react";
-import { images } from "../../../assets";
 import { NavLink, Link } from "react-router-dom";
+import GoogleBtn from "./GoogleBtn";
+import { useSelector, useDispatch } from "react-redux";
+import { loggedOut } from "../../Store/UserSlice";
+import { images } from "../../../assets";
 const NavList = (props) => {
+  const dispatch = useDispatch();
+  const { isLoggedIn, user } = useSelector((state) => state.user);
+  const logoutHandler = () => {
+    localStorage.setItem("token", "");
+    dispatch(loggedOut());
+  };
   return (
     <ul className={`${props.class}`}>
       <li className="border-b border-b-light-gray pb-4 relative lg:hidden">
         <div className="container mx-auto flex items-center gap-4 pt-4">
-          <Link to="/">
-            <img
-              className="w-8 h-8 rounded-full border border-light-gray"
-              src={images.logo}
-              alt="user default"
-            />
-          </Link>
-          <Link
-            to="/"
-            className="px-4 hidden py-1 border-black border-2 hover:border-2 hover:bg-black hover:text-white transition duration-300 ease-in-out"
-          >
-            Login
-          </Link>
-          <Link to="/">
-            <p className="text-dark-gray flex gap-2">
-              <span>Hi!</span>
-              <span>Dikshit</span>
-            </p>
-          </Link>
+          {isLoggedIn && (
+            <>
+              <Link to="/">
+                <img
+                  className="w-8 h-8 rounded-full border border-light-gray"
+                  src={user.image ? user.image : images.user}
+                  alt="user default"
+                />
+              </Link>
+              <Link to="/">
+                <p className="text-dark-gray flex gap-2 text-sm">
+                  <span>{user.name ? user.name.split(" ")[0] : "User"}</span>
+                </p>
+              </Link>
+            </>
+          )}
+          {!isLoggedIn && <GoogleBtn OnClick={props.login} />}
         </div>
         {/* <!-- Button to close the side window --> */}
         <button className="button-close bg-transparent order-first absolute -top-2 -right-2">
@@ -80,6 +87,11 @@ const NavList = (props) => {
           Contact
         </NavLink>
       </li>
+      {isLoggedIn && (
+        <li onClick={logoutHandler} className={`menu-links cursor-pointer `}>
+          Logout
+        </li>
+      )}
     </ul>
   );
 };

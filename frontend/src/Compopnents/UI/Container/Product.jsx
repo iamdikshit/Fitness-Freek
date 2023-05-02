@@ -2,6 +2,7 @@ import React from "react";
 import { Card } from "../UiComponents";
 import { SectionAnimate } from "../UiComponents/MotionAnimate";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const Product = (props) => {
@@ -27,10 +28,10 @@ const Product = (props) => {
         <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 items-center mb-6">
           <div className="product-heading-section">
             <h1 className="text-2xl md:text-3xl py-2 link-bottem-line font-semibold uppercase">
-              New Products
+              {props.title}
             </h1>
           </div>
-          <div className="product-heading-section mt-4 py-2 lg:mt-0 lg:py-0">
+          {/* <div className="product-heading-section mt-4 py-2 lg:mt-0 lg:py-0">
             <ul className="flex gap-3 lg:justify-end uppercase">
               <li>
                 <a className="py-2 link-after-effect text-xs" href="/">
@@ -53,10 +54,10 @@ const Product = (props) => {
                 </a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
 
-        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 pt-8">
           {/* Product cards comes here */}
           {props.products.map((d, index) => (
             <Card key={index} data={d} notify={notify} />
@@ -64,15 +65,15 @@ const Product = (props) => {
         </div>
 
         <div className="product-navigation mx-auto flex items-center justify-center py-8">
-          <a
+          <Link
             className="link-after-effect uppercase flex items-center py-2 justify-center gap-2"
-            href="/"
+            to={"product"}
           >
             <span>View All</span>
             <span>
               <ion-icon className="text-sm" name="arrow-forward"></ion-icon>
             </span>
-          </a>
+          </Link>
         </div>
       </motion.section>
 

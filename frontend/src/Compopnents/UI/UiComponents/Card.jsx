@@ -67,7 +67,7 @@ const Card = ({ data, notify }) => {
           <Link to={`product/${data.slug?.current}`}>
             <img
               src={urlFor(data.poster && data.poster).url()}
-              className="w-full h-auto hover:scale-105 object-cover transition-all duration-500"
+              className="w-full h-72 scale-10 hover:scale-105 object-cover transition-all duration-500"
               alt="product "
             />
           </Link>

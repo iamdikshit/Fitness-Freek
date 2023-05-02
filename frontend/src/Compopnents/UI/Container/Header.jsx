@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 // import { SearchBar } from "../UiComponents";
 import { images } from "../../../assets";
-import { NavList, SearchBar, Button, OverLay } from "../UiComponents";
+import {
+  NavList,
+  SearchBar,
+  Button,
+  OverLay,
+  GoogleBtn,
+} from "../UiComponents";
 import { motion } from "framer-motion";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   IoCartOutline,
   IoHeartOutline,
@@ -11,9 +18,16 @@ import {
   IoReorderThreeOutline,
   IoCloseOutline,
 } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
+import { loggedIn, loggedOut, addUser } from "../../Store/UserSlice";
+import { client } from "../../SanityConfig/client";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoggedIn, user } = useSelector((state) => state.user);
   const totalItems = useSelector((state) => state.cart.totalItems);
   const { totalItems: wishlistTotalItems } = useSelector(
     (state) => state.wishlist
@@ -27,6 +41,48 @@ const Header = () => {
   const toggleSearch = () => {
     setSearchActive((prev) => !prev);
   };
+
+  // Google Login
+
+  const login = useGoogleLogin({
+    onSuccess: async (respose) => {
+      try {
+        const res = await axios.get(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${respose.access_token}`,
+            },
+          }
+        );
+
+        localStorage.setItem("token", respose.access_token);
+
+        const userData = {
+          _id: res.data.sub,
+          _type: "user",
+          name: res.data.name,
+          email: res.data.email,
+          image: res.data.picture,
+          token: respose.access_token,
+        };
+
+        client
+          .createIfNotExists(userData)
+          .then((response) => {
+            dispatch(loggedIn());
+            dispatch(addUser(userData));
+            navigate(`${window.location.pathname}`);
+          })
+          .catch((error) => {
+            console.error("Error creating or replacing user:", error);
+          });
+      } catch (err) {
+        dispatch(loggedOut());
+        console.log(err);
+      }
+    },
+  });
 
   return (
     <>
@@ -77,21 +133,21 @@ const Header = () => {
               </Link>
             </li>
             <li className="hidden lg:block">
-              <div className="container mx-auto flex items-center gap-2 lg:hidden ">
+              <div
+                className={`container mx-auto flex items-center gap-2 ${
+                  isLoggedIn ? "" : "hidden"
+                } `}
+              >
                 <a href="/">
                   <img
                     className="w-8 h-8 rounded-full border border-light-gray"
-                    src={images.user}
-                    alt="user default "
+                    src={user?.image}
+                    alt={user.name}
                   />
                 </a>
               </div>
-              <a
-                href="login.html"
-                className="px-4 py-1  border-black border-2 hover:border-2 hover:bg-black hover:text-white transition duration-300 ease-in-out"
-              >
-                Login
-              </a>
+              {/* login */}
+              {!isLoggedIn && <GoogleBtn OnClick={login} />}
             </li>
           </ul>
         </div>
@@ -108,6 +164,7 @@ const Header = () => {
         {/* <!-- Menu for Large screen for laptop and desktop --> */}
         <div className="navbar-inner hidden lg:flex">
           <NavList
+            login={login}
             class={
               "navbar flex flex-row justify-center items-center gap-4 uppercase font-semibold"
             }
@@ -159,6 +216,7 @@ const Header = () => {
             ></IoCloseOutline>
           </Button>
           <NavList
+            login={login}
             OnClick={toggleMenu}
             class={
               "navbar flex flex-col lg:flex-row gap-2 p-4 font-semibold uppercase"

@@ -18,7 +18,7 @@ export default defineType({
       type: 'string',
       description:
         'SAM50 : first 3 are alphabet for your name or brand and last two digit for discount',
-      validation: (Rule) => Rule.required().uppercase().max(5),
+      validation: (Rule) => Rule.required().max(5),
     }),
     defineField({
       name: 'discount',
