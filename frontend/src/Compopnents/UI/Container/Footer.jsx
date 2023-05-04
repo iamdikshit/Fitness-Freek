@@ -6,6 +6,7 @@ import {
   IoLogoYoutube,
   IoLogoTwitter,
 } from "react-icons/io5";
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="footer-section py-4 px-8 md:px-16 mt-24 pb-2 bg-red-100">
@@ -22,24 +23,24 @@ const Footer = () => {
           <h1 className="uppercase font-semibold">Quick links</h1>
           <ul>
             <li>
-              <a className="text-sm text-light-gray" href="/">
+              <Link className="text-sm text-light-gray" to={"/"}>
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="text-sm text-light-gray" href="/">
+              <Link className="text-sm text-light-gray" to={"about"}>
                 About
-              </a>
+              </Link>
             </li>
-            <li>
+            <li className="hidden">
               <a className="text-sm text-light-gray" href="/">
                 Blog
               </a>
             </li>
             <li>
-              <a className="text-sm text-light-gray" href="/">
+              <Link className="text-sm text-light-gray" to={"product"}>
                 Shop
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

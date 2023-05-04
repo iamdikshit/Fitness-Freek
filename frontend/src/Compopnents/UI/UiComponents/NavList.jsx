@@ -62,7 +62,7 @@ const NavList = (props) => {
           to="product"
           end
         >
-          Products
+          Shop
         </NavLink>
       </li>
       <li>
@@ -76,7 +76,7 @@ const NavList = (props) => {
           About
         </NavLink>
       </li>
-      <li>
+      <li className="hidden">
         <NavLink
           onClick={props.OnClick}
           className={`${({ isActive }) =>
