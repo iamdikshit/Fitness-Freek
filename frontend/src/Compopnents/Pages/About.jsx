@@ -12,7 +12,9 @@ const About = () => {
     >
       <div className="container mx-auto grid grid-cols-1 items-center mb-6">
         <div className="service-heading-section">
-          <h1 className="text-2xl md:text-3xl py-2 link-bottem-line font-semibold uppercase">
+                 <h1
+          
+          className="text-2xl md:text-3xl py-2 link-bottem-line font-semibold uppercase">
             About us
           </h1>
         </div>
