@@ -64,12 +64,14 @@ const Card = ({ data, notify }) => {
             </div>
           )}
 
-          <Link to={`product/${data.slug?.current}`}>
-            <img
-              src={urlFor(data.poster && data.poster).url()}
-              className="w-full h-72 scale-10 hover:scale-105 object-cover transition-all duration-500"
-              alt="product "
-            />
+          <Link className="w-full" to={`product/${data.slug?.current}`}>
+            <div className="w-full h-72 flex items-center justify-center">
+              <img
+                src={urlFor(data.poster && data.poster).url()}
+                className="w-[50%] object-cover  hover:scale-105  transition-all duration-500"
+                alt="product "
+              />
+            </div>
           </Link>
           <div className="shop-icon w-full absolute bottom-0">
             <ul className="flex items-center justify-center pb-2 gap-8">

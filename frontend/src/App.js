@@ -8,7 +8,6 @@ import {
   Cart,
   Contact,
   Home,
-  Product,
   ProductDetail,
   Wishlist,
   Error,
@@ -21,6 +20,7 @@ import { loader as productDeltailLoader } from "./Compopnents/Pages/ProductDetai
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { client } from "./Compopnents/SanityConfig/client";
 import { addUser, loggedIn } from "./Compopnents/Store/UserSlice";
+import Products from "./Compopnents/Pages/Product";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -33,12 +33,12 @@ const router = createBrowserRouter([
         loader: productLoader,
       },
       {
-        path: "product",
+        path: "products",
 
         children: [
           {
             index: true,
-            element: <Product />,
+            element: <Products />,
           },
           {
             path: ":slug",
