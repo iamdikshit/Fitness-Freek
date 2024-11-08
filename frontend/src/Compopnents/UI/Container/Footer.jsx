@@ -122,7 +122,10 @@ const Footer = () => {
       </div>
       <div className="container mx-auto py-4 flex items-center justify-center">
         <p className="mx-auto text-xs text-light-gray">
-          Copyright © 2024 All rights reserved | Developed by Yesonance
+          Copyright © 2024 All rights reserved | Developed by{" "}
+          <a href="https://www.yesonance.com/" target="_top">
+            Yesonance
+          </a>
         </p>
       </div>
     </footer>
